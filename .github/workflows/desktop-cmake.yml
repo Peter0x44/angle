@@ -1,0 +1,72 @@
+name: Desktop CMake
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  windows-msvc:
+    name: Windows MSVC
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up MSVC developer shell
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Configure desktop-msvc preset
+        run: cmake --preset desktop-msvc
+
+      - name: Build public desktop libraries
+        run: cmake --build out/cmake/desktop-msvc --target libANGLE libGLESv2 libEGL libGLESv1_CM
+
+  linux:
+    name: Linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Linux desktop dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libegl1-mesa-dev \
+            libgl1-mesa-dev \
+            libx11-dev \
+            libxcb1-dev \
+            libxext-dev \
+            libxi-dev \
+            ninja-build
+
+      - name: Configure desktop-linux preset
+        run: cmake --preset desktop-linux
+
+      - name: Build public desktop libraries
+        run: cmake --build out/cmake/desktop-linux --target libANGLE libGLESv2 libEGL libGLESv1_CM
+
+  macos:
+    name: macOS
+    runs-on: macos-14
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Ninja
+        run: brew install ninja
+
+      - name: Configure desktop-macos preset
+        run: cmake --preset desktop-macos
+
+      - name: Build public desktop libraries
+        run: cmake --build out/cmake/desktop-macos --target libANGLE libGLESv2 libEGL libGLESv1_CM

@@ -25,7 +25,7 @@
 #endif  // !defined(ANGLE_EXPORT)
 
 #if !defined(ANGLE_NO_EXPORT)
-#    if defined(__GNUC__)
+#    if defined(__GNUC__) && !defined(_WIN32)
 #        define ANGLE_NO_EXPORT __attribute__((visibility("hidden")))
 #    else
 #        define ANGLE_NO_EXPORT
