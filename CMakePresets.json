@@ -56,6 +56,16 @@
       }
     },
     {
+      "name": "desktop-mingw-clang",
+      "displayName": "ANGLE desktop (MinGW clang)",
+      "description": "Desktop-only configure preset for MSYS2 clang64 with MinGW-style Windows defaults.",
+      "inherits": "desktop-mingw",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
       "name": "desktop-linux",
       "displayName": "ANGLE desktop (Linux)",
       "description": "Desktop-only configure preset for Linux GL and Vulkan work.",
@@ -76,6 +86,17 @@
         "ANGLE_USE_X11": "ON",
         "ANGLE_USE_WAYLAND": "OFF",
         "ANGLE_USE_GBM": "OFF"
+      }
+    },
+    {
+      "name": "desktop-linux-gbm",
+      "displayName": "ANGLE desktop (Linux GBM)",
+      "description": "Desktop-only configure preset for Linux GBM/DRM GL and Vulkan work.",
+      "inherits": "desktop-linux",
+      "cacheVariables": {
+        "ANGLE_USE_X11": "OFF",
+        "ANGLE_USE_WAYLAND": "OFF",
+        "ANGLE_USE_GBM": "ON"
       }
     },
     {

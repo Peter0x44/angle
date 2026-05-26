@@ -60,7 +60,7 @@ Current validation status:
 
 - `desktop-mingw` builds the public static desktop stack with Null, GL, and Vulkan enabled by default.
 - Dedicated MinGW probe builds now also compile `libANGLE` with `ANGLE_ENABLE_D3D11=ON` and `ANGLE_ENABLE_D3D9=ON` in separate build trees.
-- GitHub Actions now configure and build the public static desktop targets through `desktop-msvc`, `desktop-linux`, and `desktop-macos`.
+- GitHub Actions now configure and build the public static desktop targets through `desktop-msvc`, `desktop-mingw`, `desktop-mingw-clang`, `desktop-linux`, `desktop-linux-gbm`, and `desktop-macos`.
 - The current validation surface is still static-library oriented; shared-library parity, install/export support, and runtime smoke coverage are still in progress.
 
 Configure example:
@@ -79,8 +79,10 @@ cmake --preset desktop-mingw
 The current presets are desktop-only and focus on host-native development:
 
 - `desktop-mingw` keeps Windows MinGW on the GL, Vulkan, and Null path first.
+- `desktop-mingw-clang` mirrors the MinGW Windows path under MSYS2 `clang64`.
 - `desktop-msvc` keeps the Windows D3D backends enabled for a Visual Studio developer environment.
-- `desktop-linux` and `desktop-macos` express the expected desktop backend defaults for those platforms.
+- `desktop-linux` covers the X11 Linux path, while `desktop-linux-gbm` covers the GBM/DRM Linux path.
+- `desktop-macos` expresses the expected desktop backend defaults for macOS GL, Vulkan, and Metal.
 
 Planned next steps:
 

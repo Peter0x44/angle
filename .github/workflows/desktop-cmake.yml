@@ -33,9 +33,89 @@ jobs:
       - name: Build public desktop libraries
         run: cmake --build out/cmake/desktop-msvc --target libANGLE libGLESv2 libEGL libGLESv1_CM
 
+  windows-msys2:
+    name: Windows ${{ matrix.name }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: MinGW GCC
+            msystem: MINGW64
+            preset: desktop-mingw
+            packages: >-
+              git
+              mingw-w64-x86_64-cmake
+              mingw-w64-x86_64-gcc
+              mingw-w64-x86_64-ninja
+          - name: MinGW clang
+            msystem: CLANG64
+            preset: desktop-mingw-clang
+            packages: >-
+              git
+              mingw-w64-clang-x86_64-clang
+              mingw-w64-clang-x86_64-cmake
+              mingw-w64-clang-x86_64-lld
+              mingw-w64-clang-x86_64-ninja
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.msystem }}
+          update: true
+          path-type: strict
+          install: ${{ matrix.packages }}
+
+      - name: Initialize required submodules
+        shell: msys2 {0}
+        run: >
+          git -c protocol.version=2 submodule update --init --depth=1 --
+          third_party/spirv-headers/src
+          third_party/spirv-tools/src
+          third_party/vulkan-headers/src
+          third_party/vulkan_memory_allocator
+          third_party/zlib
+
+      - name: Configure ${{ matrix.preset }} preset
+        shell: msys2 {0}
+        run: cmake --preset ${{ matrix.preset }}
+
+      - name: Build public desktop libraries
+        shell: msys2 {0}
+        run: cmake --build out/cmake/${{ matrix.preset }} --target libANGLE libGLESv2 libEGL libGLESv1_CM
+
   linux:
-    name: Linux
+    name: Linux ${{ matrix.name }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: X11
+            preset: desktop-linux
+            packages: >-
+              libegl1-mesa-dev
+              libgl1-mesa-dev
+              libdrm-dev
+              libx11-dev
+              libxcb1-dev
+              libxext-dev
+              libxi-dev
+              ninja-build
+          - name: GBM/DRM
+            preset: desktop-linux-gbm
+            packages: >-
+              libegl1-mesa-dev
+              libgbm-dev
+              libgl1-mesa-dev
+              libdrm-dev
+              ninja-build
 
     steps:
       - name: Check out sources
@@ -55,21 +135,13 @@ jobs:
       - name: Install Linux desktop dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            libegl1-mesa-dev \
-            libgl1-mesa-dev \
-            libdrm-dev \
-            libx11-dev \
-            libxcb1-dev \
-            libxext-dev \
-            libxi-dev \
-            ninja-build
+          sudo apt-get install -y ${{ matrix.packages }}
 
-      - name: Configure desktop-linux preset
-        run: cmake --preset desktop-linux
+      - name: Configure ${{ matrix.preset }} preset
+        run: cmake --preset ${{ matrix.preset }}
 
       - name: Build public desktop libraries
-        run: cmake --build out/cmake/desktop-linux --target libANGLE libGLESv2 libEGL libGLESv1_CM
+        run: cmake --build out/cmake/${{ matrix.preset }} --target libANGLE libGLESv2 libEGL libGLESv1_CM
 
   macos:
     name: macOS
