@@ -1384,6 +1384,11 @@ class ImageRenderPassUsage
     // Track how it is being used by current open renderPass.
     struct RenderPassAndImageUsageFlags
     {
+        RenderPassAndImageUsageFlags() = default;
+        explicit RenderPassAndImageUsageFlags(const void *commands)
+            : renderPassCommands(commands), usageFlags()
+        {}
+
         const void *renderPassCommands;
         RenderPassUsageFlags usageFlags;
     };

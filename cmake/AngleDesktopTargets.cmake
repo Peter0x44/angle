@@ -50,6 +50,18 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(_angle_is_linux TRUE)
 endif()
 
+set(_angle_has_libdrm FALSE)
+if(_angle_is_linux)
+    find_path(ANGLE_LIBDRM_INCLUDE_DIR
+        NAMES drm.h
+        PATH_SUFFIXES libdrm)
+    find_library(ANGLE_LIBDRM_LIBRARY NAMES drm)
+
+    if(ANGLE_LIBDRM_INCLUDE_DIR AND ANGLE_LIBDRM_LIBRARY)
+        set(_angle_has_libdrm TRUE)
+    endif()
+endif()
+
 set(_angle_enable_cgl FALSE)
 if(APPLE AND ANGLE_ENABLE_GL)
     set(_angle_enable_cgl TRUE)
@@ -867,7 +879,11 @@ if(ANGLE_ENABLE_GL)
     endif()
 
     if(_angle_is_linux)
-        target_compile_definitions(angle_gl_backend PUBLIC ANGLE_HAS_LIBDRM)
+        if(_angle_has_libdrm)
+            target_compile_definitions(angle_gl_backend PUBLIC ANGLE_HAS_LIBDRM)
+            target_include_directories(angle_gl_backend PUBLIC ${ANGLE_LIBDRM_INCLUDE_DIR})
+            target_link_libraries(angle_gl_backend PUBLIC ${ANGLE_LIBDRM_LIBRARY})
+        endif()
 
         if(ANGLE_USE_X11)
             target_link_libraries(angle_gl_backend
