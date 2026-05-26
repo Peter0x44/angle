@@ -8,6 +8,7 @@
 
 #include <string>
 #include <utility>
+#include <variant>
 
 #include "GLES2/gl2.h"
 #include "GLSLANG/ShaderLang.h"
@@ -247,10 +248,9 @@ class RewritePipelineVarOutputBuilder
                 ImmutableString(wgslName.glslBuiltinName), compiler.getShaderVersion()));
             if (kOutputVariableUses)
             {
-                std::cout << "Var " << shaderVarName
-                          << " did not have a BuiltIn var but does have a builtin in the symbol "
-                             "table"
-                          << std::endl;
+                ANGLE_LOG(INFO) << "Var " << shaderVarName
+                                << " did not have a BuiltIn var but does have a builtin in the "
+                                   "symbol table";
             }
         }
 
@@ -351,8 +351,9 @@ class RewritePipelineVarOutputBuilder
 
         if (kOutputVariableUses)
         {
-            std::cout << "Use of " << (shaderVar.isBuiltIn() ? "builtin " : "") << debugString
-                      << ": " << shaderVar.name << std::endl;
+            ANGLE_LOG(INFO) << "Use of "
+                            << (shaderVar.isBuiltIn() ? "builtin " : "") << debugString << ": "
+                            << shaderVar.name;
         }
 
         if (shaderVar.isBuiltIn())

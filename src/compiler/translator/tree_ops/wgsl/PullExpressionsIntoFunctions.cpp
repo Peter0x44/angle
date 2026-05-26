@@ -9,6 +9,8 @@
 
 #include "compiler/translator/tree_ops/wgsl/PullExpressionsIntoFunctions.h"
 
+#include <variant>
+
 #include "common/log_utils.h"
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Common.h"

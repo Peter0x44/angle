@@ -41,11 +41,6 @@ if(_angle_is_desktop_apple)
 endif()
 
 set(_angle_default_wgpu FALSE)
-if(NOT WIN32 OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    if(NOT _angle_is_mingw)
-        set(_angle_default_wgpu TRUE)
-    endif()
-endif()
 
 set(_angle_default_x11 FALSE)
 set(_angle_default_wayland FALSE)
