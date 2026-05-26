@@ -13,7 +13,16 @@ jobs:
       - name: Check out sources
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          fetch-depth: 1
+
+      - name: Initialize required submodules
+        run: >
+          git -c protocol.version=2 submodule update --init --depth=1 --
+          third_party/spirv-headers/src
+          third_party/spirv-tools/src
+          third_party/vulkan-headers/src
+          third_party/vulkan_memory_allocator
+          third_party/zlib
 
       - name: Set up MSVC developer shell
         uses: ilammy/msvc-dev-cmd@v1
@@ -32,7 +41,16 @@ jobs:
       - name: Check out sources
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          fetch-depth: 1
+
+      - name: Initialize required submodules
+        run: >
+          git -c protocol.version=2 submodule update --init --depth=1 --
+          third_party/spirv-headers/src
+          third_party/spirv-tools/src
+          third_party/vulkan-headers/src
+          third_party/vulkan_memory_allocator
+          third_party/zlib
 
       - name: Install Linux desktop dependencies
         run: |
@@ -40,6 +58,7 @@ jobs:
           sudo apt-get install -y \
             libegl1-mesa-dev \
             libgl1-mesa-dev \
+            libdrm-dev \
             libx11-dev \
             libxcb1-dev \
             libxext-dev \
@@ -60,7 +79,16 @@ jobs:
       - name: Check out sources
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          fetch-depth: 1
+
+      - name: Initialize required submodules
+        run: >
+          git -c protocol.version=2 submodule update --init --depth=1 --
+          third_party/spirv-headers/src
+          third_party/spirv-tools/src
+          third_party/vulkan-headers/src
+          third_party/vulkan_memory_allocator
+          third_party/zlib
 
       - name: Install Ninja
         run: brew install ninja
